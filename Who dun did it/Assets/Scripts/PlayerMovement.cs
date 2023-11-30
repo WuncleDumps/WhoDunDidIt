@@ -7,9 +7,11 @@ public class PlayerMovementWithMouseLook : MonoBehaviour
     public float moveSpeed = 5.0f;
     public float mouseSensitivity = 2.0f;
 
+    private float rotationX = 0.0f;
+
     void Update()
     {
-        // Player movement
+        // Arrow Movement
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -22,10 +24,14 @@ public class PlayerMovementWithMouseLook : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
+        // Horizontal Rotation
         transform.Rotate(Vector3.up * mouseX);
 
-        // Vertical rotation is clamped to avoid flipping the camera
-        float newRotationX = Mathf.Clamp(transform.rotation.eulerAngles.x - mouseY, -90.0f, 90.0f);
-        Camera.main.transform.rotation = Quaternion.Euler(newRotationX, transform.rotation.eulerAngles.y, 0.0f);
+        // Vertical Rotation
+        rotationX -= mouseY;
+        rotationX = Mathf.Clamp(rotationX, -90.0f, 90.0f);
+
+        transform.localRotation = Quaternion.Euler(rotationX, transform.localRotation.eulerAngles.y, 0.0f);
     }
 }
+
