@@ -7,11 +7,14 @@ public class PlayerMovementWithMouseLook : MonoBehaviour
     public float moveSpeed = 5.0f;
     public float mouseSensitivity = 2.0f;
 
-    private float rotationX = 0.0f;
-
     void Update()
     {
-        // Arrow Movement
+        HandleMovement();
+        HandleMouseLook();
+    }
+
+    void HandleMovement()
+    {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -19,19 +22,13 @@ public class PlayerMovementWithMouseLook : MonoBehaviour
         Vector3 moveVelocity = moveDirection * moveSpeed;
 
         transform.Translate(moveVelocity * Time.deltaTime);
+    }
 
-        // Mouse look
+    void HandleMouseLook()
+    {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // Horizontal Rotation
+        // Left Right Look
         transform.Rotate(Vector3.up * mouseX);
-
-        // Vertical Rotation
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90.0f, 90.0f);
-
-        transform.localRotation = Quaternion.Euler(rotationX, transform.localRotation.eulerAngles.y, 0.0f);
     }
 }
-
