@@ -2,36 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovementWithMouseLook : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5.0f;
-    public float mouseSensitivity = 2.0f;
+    public CharacterController controller;
+    public float baseSpeed = 12f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 3f;
+    public float sprintSpeed = 5f;
 
-    private float rotationX = 0.0f;
+    float speedBoost = 1f;
+    Vector3 velocity;
+    void Start()
+    {
+
+    }
 
     void Update()
     {
-        // Arrow Movement
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        if (controller.isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
 
-        Vector3 moveDirection = new Vector3(horizontal, 0.0f, vertical).normalized;
-        Vector3 moveVelocity = moveDirection * moveSpeed;
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
 
-        transform.Translate(moveVelocity * Time.deltaTime);
+        if (Input.GetButton("Fire3"))
+            speedBoost = sprintSpeed;
+        else
+            speedBoost = 1f;
 
-        // Mouse look
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // Horizontal Rotation
-        transform.Rotate(Vector3.up * mouseX);
+        Vector3 move = transform.right * x + transform.forward * z;
 
-        // Vertical Rotation
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90.0f, 90.0f);
+        controller.Move(move * (baseSpeed + speedBoost) * Time.deltaTime);
 
-        transform.localRotation = Quaternion.Euler(rotationX, transform.localRotation.eulerAngles.y, 0.0f);
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
     }
 }
-
