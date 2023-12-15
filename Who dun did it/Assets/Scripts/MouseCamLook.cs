@@ -21,8 +21,10 @@ public class MouseCamLook : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
+        // Rotate the camera up and down
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
+        // Rotate the player's body left and right
         playerBody.Rotate(Vector3.up * mouseX);
     }
 }
