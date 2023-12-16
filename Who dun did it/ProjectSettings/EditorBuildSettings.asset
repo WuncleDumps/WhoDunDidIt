@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/NewWDIMap.unity
+    guid: b29f3410d139cbf42beaf4537a645ab8
   m_configObjects: {}
